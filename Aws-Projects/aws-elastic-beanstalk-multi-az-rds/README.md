@@ -75,9 +75,9 @@ Multi-AZ ensures automatic failover in case of primary DB failure.
 
 Modified inbound rules to allow MySQL (3306) access only from Elastic Beanstalk EC2 security group.
 
-![RDS SG Rule 1](screenshots/03-rds-security-group-rule-1.png)
+![RDS SG Rule 1](screenshots/03-rds-sg-rule-1.png)
 
-![RDS SG Rule 2](screenshots/04-rds-security-group-rule-2.png)
+![RDS SG Rule 2](screenshots/04-rds-sg-rule-2.png)
 
 ---
 
@@ -87,15 +87,15 @@ Modified inbound rules to allow MySQL (3306) access only from Elastic Beanstalk 
 - Platform: PHP
 - Managed by Elastic Beanstalk
 
-![Elastic Beanstalk Environment](screenshots/05-elastic-beanstalk-environment-creation.png)
+![Elastic Beanstalk Environment](screenshots/05-elastic-beanstalk-environment.png)
 
 ---
 
-## 5️⃣ Attached DB Security Group to EB Security Group
+## 5️⃣ Attached DB Security Group to Elastic Beanstalk Security Group
 
 Ensured secure communication between application tier and database tier.
 
-![DB SG Attached](screenshots/06-db-sg-attached-to-eb-sg.png)
+![DB SG Configuration](screenshots/06-eb-db-sg-configuration.png)
 
 ---
 
@@ -146,7 +146,7 @@ Deleted the RDS instance after project completion.
 # 🔐 Security Implementation
 
 - RDS placed in private subnets
-- Inbound MySQL access restricted to EB EC2 security group only
+- Inbound MySQL access restricted to Elastic Beanstalk EC2 security group only
 - Public HTTP access routed through Application Load Balancer
 - Decoupled database architecture for security and persistence
 
