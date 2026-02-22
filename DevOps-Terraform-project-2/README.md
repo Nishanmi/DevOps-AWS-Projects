@@ -1,90 +1,203 @@
-# TerraformLifecycle – DevOps Lifecycle Project
-
-## Project Architecture
-
-<img width="1176" height="751" alt="Screenshot 2025-10-06 144146" src="https://github.com/user-attachments/assets/2bbb22f5-895e-4c07-98f8-efc5505d1377" />
-
-<img width="803" height="667" alt="Screenshot 2025-10-06 144205" src="https://github.com/user-attachments/assets/c43fb828-e88b-4616-83ce-6c4dcbeb0b36" />
-
-## Project Objective
-The objective of this project is to implement a **complete DevOps lifecycle**, automating the deployment, scaling, and management of containerized applications. Key goals include:
-
-- Automating infrastructure provisioning on AWS using Terraform.
-- Containerizing the application with Docker and deploying it on Kubernetes.
-- Implementing CI/CD automation using Jenkins.
-- Ensuring scalable, reliable, and production-ready deployments.
+# 🚀 DevOps Capstone Project 2  
+## Terraform + Ansible + Jenkins + Docker + Kubernetes
 
 ---
 
-## Implementation Overview
+# 📌 Project Overview
 
-### 1. Git Workflow
+This project demonstrates a complete DevOps lifecycle implementation including:
 
-- **Branching Strategy:** All commits are made to the `master` branch.
-- **Release Cycle:** Production releases occur on the **25th of every month**.
-- Ensures controlled and predictable production deployment.
+- Infrastructure provisioning using Terraform
+- Configuration management using Ansible
+- CI/CD automation using Jenkins
+- Docker image build and push to DockerHub
+- Kubernetes cluster deployment with 2 replicas
+- NodePort service exposure on port 30008
+
+Application Repository Used:
+https://github.com/hshar/website.git
 
 ---
 
-### 2. Docker Containerization
+# 🏗 Architecture Diagram
 
-- **Dockerfile:** Custom image created from application code.
-- Built automatically on every GitHub push and pushed to Docker Hub.
+## 🔹 High-Level CI/CD Flow
 
-3. Infrastructure Provisioning
+![Architecture Diagram 1](screenshots/architecture-diagram-1.png)
 
-Tool Used: Terraform
+## 🔹 Infrastructure & Configuration Flow
 
-Workers Setup:
+![Architecture Diagram 2](screenshots/architecture-diagram-2.png)
 
-Worker1: Jenkins, Java
+---
 
-Worker2: Docker, Kubernetes
+# 🏗 Infrastructure Provisioning – Terraform
 
-Worker3: Java, Docker, Kubernetes
+Terraform was used to create the required EC2 infrastructure:
 
-Worker4: Docker, Kubernetes
+- Controller Machine (Terraform + Ansible + Jenkins)
+- Kubernetes Master Node
+- Kubernetes Worker Node 1
+- Kubernetes Worker Node 2
 
-Terraform scripts automate creation of EC2 instances, networking, and security groups.
+## Terraform Commands Used
 
-4. Configuration Management
+```bash
+terraform init
+terraform validate
+terraform plan
+terraform apply
+```
 
--Tool Used: Ansible
+![Terraform Apply](screenshots/03-terraform-apply.png)
+![Instances Created](screenshots/04-ec2-instances-created.png)
 
--Automates software installation and configuration on all worker nodes.
+---
 
-Files:
+# ⚙ Configuration Management – Ansible
 
-inventory.ini – Defines servers
+Ansible was used to automate software installation and configuration across all machines.
 
-book.yml – Automates software installation
+### Controller Machine:
+- Jenkins
+- Java
+- Ansible
 
-master.sh – Executed on master server
+### Kubernetes Nodes:
+- Docker
+- Kubernetes
+- Java (where required)
 
-slaves.sh - Executed on slaves server
+## Ansible Files Used
 
-5. Kubernetes Deployment
+- `inventory`
+- `book.yml`
+- `master.sh`
+- `slaves.sh`
 
-Replicas: 2
+```bash
+ansible-playbook -i inventory book.yml
+```
 
-Service Type: NodePort
+![Inventory](screenshots/07-ansible-inventory-file.png)
+![Playbook Execution](screenshots/12-ansible-playbook-execution.png)
 
-Port: 30008
+---
 
-Deploys Docker image from Docker Hub without modifying testing containers.
+# ☸ Kubernetes Cluster Setup
 
-files - deployment.yml, service.yml 
+Kubernetes cluster was initialized on the master node:
 
-6. Jenkins CI/CD
+```bash
+kubeadm init --apiserver-advertise-address=<master-private-ip> --pod-network-cidr=10.244.0.0/16
+```
 
-Jenkinsfile: Automates build, test, and deployment process.
+Worker nodes joined using the generated join command.
 
-Triggered on commit to master branch.
+![Cluster Init](screenshots/13-kubeadm-init.png)
+![Cluster Nodes Joined](screenshots/14-kubernetes-cluster-nodes-joined.png)
 
-Ensures continuous delivery to production environment.
+---
 
-jenkins pipeline script -  Jenkinsfile
+# 🐳 Docker Containerization
 
-7. Screenshots of the Projects are Uploaded In this Drive.
+A custom Dockerfile was created to containerize the application.
 
-   --->  https://docs.google.com/document/d/1jkhLpQWdd6RXZ2OnLS0P1EjmO4VouuiN/edit?usp=sharing&ouid=103624519870238324874&rtpof=true&sd=true
+Image built and pushed to DockerHub:
+
+```
+nishant1784/devops-project2
+```
+
+![Dockerfile](screenshots/19-dockerfile-created.png)
+![DockerHub Push](screenshots/29-dockerhub-image-pushed.png)
+
+---
+
+# 🔁 Jenkins CI/CD Pipeline
+
+A Jenkins Pipeline was created to automate:
+
+1. Clone GitHub repository  
+2. Build Docker image  
+3. Push image to DockerHub  
+4. Deploy application to Kubernetes cluster  
+
+## Pipeline Stages
+
+- Clone Repository  
+- Build Docker Image  
+- Push to DockerHub  
+- Kubernetes Deployment  
+
+![Pipeline Job](screenshots/22-jenkins-job1-created.png)
+![Pipeline Script](screenshots/23-jenkins-pipeline-script.png)
+![Build Output](screenshots/24-build-console-output-1.png)
+
+---
+
+# ☸ Kubernetes Deployment
+
+Deployment configuration:
+
+- 2 replicas
+- Custom Docker image
+- NodePort Service on port 30008
+
+```bash
+kubectl apply -f Deploy.yaml
+kubectl apply -f Service.yaml
+```
+
+![Deployment YAML](screenshots/20-kubernetes-deployment-yaml.png)
+![Service YAML](screenshots/21-kubernetes-service-yaml.png)
+
+---
+
+# 🌍 Final Application Access
+
+Application exposed via:
+
+```
+http://<kube-master-public-ip>:30008
+```
+
+![Final Output](screenshots/31-final-nodeport-browser-output.png)
+
+---
+
+# 🔄 Complete DevOps Flow
+
+Terraform  
+↓  
+EC2 Infrastructure Creation  
+↓  
+Ansible Configuration  
+↓  
+Jenkins Pipeline Trigger  
+↓  
+Docker Build & Push  
+↓  
+Kubernetes Deployment  
+↓  
+NodePort Service Exposure  
+
+---
+
+# 🧠 Key Concepts Demonstrated
+
+- Infrastructure as Code (Terraform)
+- Configuration Management (Ansible)
+- Jenkins CI/CD Pipeline
+- Docker Image Build & Push
+- Kubernetes Cluster Setup
+- Replica Deployment
+- NodePort Service Configuration
+- Automated Container Orchestration
+
+---
+
+## 👨‍💻 Author
+
+Nishant Mishra  
+DevOps & Cloud Enthusiast
