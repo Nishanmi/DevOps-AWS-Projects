@@ -196,6 +196,22 @@ NodePort Service Exposure
 - Automated Container Orchestration
 
 ---
+---
+
+# 📄 Complete Step-by-Step Documentation
+
+A detailed step-by-step implementation guide with all  screenshots is available below:
+
+🔗 Full Documentation (Google Docs):  
+https://docs.google.com/document/d/1jkhLpQWdd6RXZ2OnLS0P1EjmO4VouuiN/edit?usp=sharing
+
+This document contains:
+- Complete Terraform setup
+- Full Ansible configuration steps
+- Kubernetes cluster initialization
+- Jenkins pipeline configuration
+- All build console screenshots
+- Detailed execution proof
 
 ## 👨‍💻 Author
 
