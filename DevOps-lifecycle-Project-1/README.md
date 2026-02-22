@@ -1,53 +1,216 @@
-#  DevOps Lifecycle Project
+# 🚀 DevOps Lifecycle Implementation – Abode Software
 
-## Project Objective
+## 📌 Project Overview
 
-The goal of this project was to implement a complete **DevOps lifecycle** forsweb application. The primary objectives were:
+As a Sr. DevOps Engineer at Abode Software, I was tasked with implementing a complete DevOps lifecycle for the company’s product hosted on GitHub.
 
-1. Automate the installation of necessary software on target servers.
-2. Establish a CI/CD process for building, testing, and deploying the application.
-3. Containerize the application using Docker for consistent deployments.
-4. Ensure the application is deployed to production automatically upon stable releases.
+Product Repository:
+https://github.com/hshar/website.git
+
+The goal was to automate:
+
+- Infrastructure configuration
+- Software provisioning
+- Git branching workflow
+- CI/CD automation
+- Docker containerization
+- Environment-based deployment (Test & Production)
 
 ---
 
-## Implementation Overview
+# 🏗 Infrastructure Architecture
 
-### 1. Configuration Management
+Three EC2 instances were launched:
 
-- **Tool Used:** Ansible
-- **Purpose:** Install required software (Java, Docker) on target servers.
-- **Key Files:**
-  - `inventory.ini`: Defines the target servers and connection details.
-  - `playbook.yml`: Automates software installation.
-  - `slaves.sh`: Script executed on servers to install packages.
+- **Master Server** – Jenkins + Ansible
+- **Test Server**
+- **Production Server**
 
-2. Containerization
+![EC2 Overview](screenshots/01-ec2-instances-overview.png)
 
--Tool Used: Docker
+---
 
--Purpose: Containerize the web application for consistent and portable deployment.
+# ⚙ Configuration Management – Ansible
 
--Key Files:
+Ansible was used to automatically configure Test and Production servers.
 
--Dockerfile: Defines the container image and sets up Apache with application code in /var/www/html.
+## 🔹 Tasks Automated
 
-3. CI/CD Automation
+- Installed Java
+- Installed Docker
+- Ensured consistent configuration across nodes
 
--Tool Used: Jenkins
+## 🔹 Files Included
 
--Purpose: Automate the build, test, and deployment process.
+- `inventory` – Contains Test & Prod server IPs
+- `playbook.yml` – Installs required software
+- `script.sh` (if applicable)
 
-Workflow:
+## 🔹 Execution Command
 
-1.On code commit to develop branch: Build and run tests.
+```bash
+ansible-playbook -i inventory playbook.yml
+```
 
-2.On code commit to master branch: Build, test, and deploy to production.
+## 🔹 Inventory File
+![Inventory](screenshots/07-ansible-inventory-file.png)
 
--The CI/CD process ensures faster, error-free deployments and reliable software delivery.
+## 🔹 Playbook Execution
+![Playbook](screenshots/08-ansible-playbook-execution.png)
 
-4. Screenshots / Results
+---
 
-Screenshots of the project can be viewed here
---->  https://docs.google.com/document/d/1C-1YyIh9BkICvoFLEsCW4sraSMVqXDLH/edit?usp=sharing&ouid=103624519870238324874&rtpof=true&sd=true
+# 🧩 Jenkins Master–Agent Setup
 
+- Jenkins installed on Master server
+- Test & Prod machines configured as Jenkins nodes
+- SSH-based agent communication configured
+
+![Jenkins Dashboard](screenshots/11-jenkins-dashboard.png)
+![Jenkins Nodes](screenshots/14-jenkins-all-nodes.png)
+
+---
+
+# 🌿 Git Workflow Strategy
+
+Branch-based deployment logic implemented:
+
+- `develop` branch → Deploy to **Test**
+- `master` branch → Deploy to **Production**
+
+Webhook configured to trigger Jenkins automatically on push.
+
+![Fork](screenshots/15-github-forked-repository.png)
+![Develop Branch](screenshots/16-github-develop-branch.png)
+![Webhook](screenshots/17-github-webhook-configuration.png)
+
+---
+
+# 🐳 Docker Containerization
+
+Application was containerized using a Dockerfile.
+
+Base Image:
+```
+hshar/webapp
+```
+
+Application directory:
+```
+/var/www/html
+```
+
+## 🔹 Docker Commands Used in Pipeline
+
+```bash
+sudo docker build . -t img1
+sudo docker run -itd --name cont1 -p 81:80 img1
+```
+
+---
+
+# 🔁 CI/CD Pipeline Implementation
+
+The DevOps lifecycle was implemented using three Jenkins jobs:
+
+---
+
+## 🔹 Job1 – Build
+
+- Triggered on every commit
+- Builds Docker image
+- Prepares artifact for deployment
+
+![Job1 Build](screenshots/18-jenkins-job1-build.png)
+
+---
+
+## 🔹 Job2 – Test Deployment
+
+- Triggered when commit is pushed to `develop`
+- Deploys container on Test server only
+
+![Job2 Test](screenshots/19-jenkins-job2-test.png)
+
+---
+
+## 🔹 Job3 – Production Deployment
+
+- Triggered when commit is pushed to `master`
+- Deploys container on Production server
+
+![Job3 Prod](screenshots/20-jenkins-job3-prod.png)
+
+---
+
+# 📊 Build & Deployment Execution
+
+## 🔹 Console Output
+![Build Console](screenshots/22-build-console-output.png)
+
+---
+
+# 🌍 Final Deployment Result
+
+Application successfully deployed and accessible via browser from slave server.
+
+![Final Deployment](screenshots/23-final-website-deployment.png)
+
+---
+
+# 🔄 DevOps Lifecycle Flow
+
+GitHub Push  
+↓  
+Webhook  
+↓  
+Jenkins Pipeline  
+↓  
+Docker Build  
+↓  
+Branch-Based Deployment  
+↓  
+Test or Production Server  
+
+---
+
+# 🧠 Key Concepts Implemented
+
+- Infrastructure Provisioning (EC2)
+- Configuration Management (Ansible)
+- Jenkins Master-Agent Architecture
+- Git Branching Strategy
+- Webhook Integration
+- CI/CD Automation
+- Docker Containerization
+- Environment-Based Deployment Logic
+- Automated Build & Deployment
+
+---
+
+# 🎯 Outcome
+
+A fully automated DevOps lifecycle was implemented with:
+
+✔ Zero manual deployments  
+✔ Branch-based environment control  
+✔ Automated testing workflow  
+✔ Containerized application delivery  
+✔ Infrastructure configuration automation  
+
+---
+
+# 📁 Project Structure
+
+```
+abode-devops-lifecycle-project/
+├── ansible/
+│   ├── inventory
+│   ├── playbook.yml
+│   └── script.sh
+├── Dockerfile
+├── screenshots/
+└── README.md
+```
+
+---
